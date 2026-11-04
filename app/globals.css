@@ -1,36 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --cream: #f5f2eb;
-  --sage: #91b7af;
-  --sage-deep: #3e6b64;
-  --ink: #2c2825;
-  --brown: #6b5344;
-  --brown-soft: #8a7568;
-  --card: #fffcf8;
-  --line: #e4dcd2;
-  --background: linear-gradient(to bottom, #91b7af, #f5f2eb);
+  --mist: #e7f3ef;
+  --forest: #3c6e64;
+  --forest-deep: #2c5850;
+  --clay: #8b5a48;
+  --ink: #243330;
+  --muted: #5a6e68;
+  --card: #ffffff;
+  --line: rgba(36, 51, 48, 0.08);
+  --background: #e7f1ed;
   --foreground: var(--ink);
 }
 
 @theme inline {
-  --color-cream: var(--cream);
-  --color-sage: var(--sage);
-  --color-sage-deep: var(--sage-deep);
+  --color-mist: var(--mist);
+  --color-forest: var(--forest);
+  --color-forest-deep: var(--forest-deep);
+  --color-clay: var(--clay);
   --color-ink: var(--ink);
-  --color-brown: var(--brown);
-  --color-brown-soft: var(--brown-soft);
+  --color-muted: var(--muted);
   --color-card: var(--card);
   --color-line: var(--line);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-nunito), "Nunito", sans-serif;
+  --font-sans: var(--font-greycliff), "Greycliff CF", sans-serif;
 }
 
 body {
-  background: linear-gradient(to bottom, #91b7af, #f5f2eb);
+  background: #d7e8e3;
   color: var(--ink);
   font-family: var(--font-sans);
+}
+
+.surface {
+  background: #fff;
+  border-radius: 1.35rem;
+  box-shadow: 0 14px 34px rgba(44, 88, 80, 0.08);
 }
 
 .scrollbar-none {
@@ -42,6 +48,6 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--sage-deep);
+  outline: 2px solid var(--forest);
   outline-offset: 2px;
 }

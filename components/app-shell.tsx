@@ -2,15 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { HomeScreen } from "@/components/home-screen";
-import { HomeIcon, ProfileIcon, ShopIcon, WorkshopIcon } from "@/components/icons";
-import { ProfileScreen, ShopScreen, WorkshopsScreen } from "@/components/other-screens";
+import { BowlIcon, HomeIcon, LeafIcon, ShopIcon, WorkshopIcon } from "@/components/icons";
+import { RecipesScreen, ShopScreen, WorkshopsScreen, YogaScreen } from "@/components/other-screens";
 import type { Tab } from "@/lib/content";
 
 const tabs: Array<{ id: Tab; label: string; Icon: typeof HomeIcon }> = [
   { id: "home", label: "Home", Icon: HomeIcon },
   { id: "workshops", label: "Workshops", Icon: WorkshopIcon },
   { id: "shop", label: "Shop", Icon: ShopIcon },
-  { id: "profile", label: "Profile", Icon: ProfileIcon },
+  { id: "recipes", label: "Recipes", Icon: BowlIcon },
+  { id: "yoga", label: "Yoga", Icon: LeafIcon },
 ];
 
 export function AppShell() {
@@ -55,17 +56,18 @@ export function AppShell() {
   }
 
   return (
-    <div className="flex min-h-dvh justify-center bg-gradient-to-b from-sage to-cream">
-      <div className="flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-gradient-to-b from-sage to-cream sm:my-4 sm:h-[calc(100dvh-2rem)] sm:rounded-[2rem] sm:shadow-[0_0_0_1px_rgba(107,83,68,0.08),0_24px_60px_rgba(44,40,37,0.14)]">
+    <div className="flex min-h-dvh justify-center bg-[#d7e8e3]">
+      <div className="flex h-dvh w-full max-w-[430px] flex-col overflow-hidden bg-[linear-gradient(180deg,#e5f3ef_0%,#f3f7f4_32%,#f6f4ef_100%)] sm:my-4 sm:h-[calc(100dvh-2rem)] sm:rounded-[2rem] sm:shadow-[0_24px_70px_rgba(36,72,66,0.16)]">
         <div ref={scroller} className="min-h-0 flex-1 overflow-y-auto scrollbar-none">
           {tab === "home" ? <HomeScreen onNavigate={navigate} /> : null}
           {tab === "workshops" ? <WorkshopsScreen /> : null}
           {tab === "shop" ? <ShopScreen /> : null}
-          {tab === "profile" ? <ProfileScreen /> : null}
+          {tab === "recipes" ? <RecipesScreen /> : null}
+          {tab === "yoga" ? <YogaScreen /> : null}
         </div>
         <nav
           aria-label="Primary"
-          className="grid shrink-0 grid-cols-4 border-t border-line bg-card px-1 pt-1.5 pb-[max(0.45rem,env(safe-area-inset-bottom))]"
+          className="grid shrink-0 grid-cols-5 border-t border-line bg-white/95 px-1 pt-2 pb-[max(0.55rem,env(safe-area-inset-bottom))] backdrop-blur-md"
         >
           {tabs.map(({ id, label, Icon }) => {
             const active = tab === id;
@@ -75,11 +77,13 @@ export function AppShell() {
                 type="button"
                 aria-current={active ? "page" : undefined}
                 onClick={() => navigate(id)}
-                className={`flex flex-col items-center gap-0.5 rounded-xl py-1.5 text-[11px] font-semibold ${
-                  active ? "text-sage-deep" : "text-brown-soft"
+                className={`flex flex-col items-center gap-1 py-1 text-[10px] font-medium tracking-[-0.01em] ${
+                  active ? "text-forest" : "text-muted"
                 }`}
               >
-                <Icon className="h-5 w-5" />
+                <span className={`flex h-8 w-9 items-center justify-center rounded-full ${active ? "bg-forest/10" : ""}`}>
+                  <Icon className="h-[22px] w-[22px]" />
+                </span>
                 {label}
               </button>
             );

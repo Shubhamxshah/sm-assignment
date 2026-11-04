@@ -9,6 +9,7 @@ import {
   carouselSlides,
   categories,
   inr,
+  mediaSrc,
   member,
   potluck,
   products,
@@ -38,17 +39,23 @@ function hit(query: string, ...parts: Array<string | undefined>) {
     .includes(needle);
 }
 
+function SectionTitle({ children }: { children: string }) {
+  return (
+    <h2 className="text-[1.65rem] font-medium leading-[1.15] tracking-[-0.035em] text-clay">{children}</h2>
+  );
+}
+
 export function HomeScreen({
   onNavigate,
 }: {
   onNavigate: (tab: Tab, sectionId?: string) => void;
 }) {
   const [query, setQuery] = useState("");
-  const [hello, setHello] = useState("Good Morning");
+  const [hello, setHello] = useState("Good morning");
 
   useEffect(() => {
     const hour = new Date().getHours();
-    const next = hour < 12 ? "Good Morning" : hour < 17 ? "Good Afternoon" : "Good Evening";
+    const next = hour < 12 ? "Good morning" : hour < 17 ? "Good afternoon" : "Good evening";
     setHello(next);
   }, []);
 
@@ -77,50 +84,64 @@ export function HomeScreen({
     showPotluck;
 
   return (
-    <div className="px-4 pt-5 pb-8">
-      <section className="rounded-[1.4rem] border-2 border-brown/20 bg-card px-5 py-4 text-center">
-        <h1 className="text-[17px] font-bold tracking-tight text-ink">
-          {hello}, {member.name}!
-        </h1>
-        <p className="mt-1 text-sm leading-5 text-brown">Your plan for today, based on what you told us!</p>
+    <div className="px-5 pt-[max(1.35rem,env(safe-area-inset-top))] pb-10">
+      <header className="flex items-center gap-3">
+        <Image
+          src="/sm-logo-s.jpeg"
+          alt="Satvic Movement"
+          width={48}
+          height={48}
+          priority
+          className="h-12 w-12 shrink-0 rounded-2xl object-cover"
+        />
+        <form className="relative min-w-0 flex-1" role="search" onSubmit={(event) => event.preventDefault()}>
+          <label htmlFor="global-search" className="sr-only">
+            Search
+          </label>
+          <SearchIcon className="pointer-events-none absolute top-1/2 left-3.5 h-[18px] w-[18px] -translate-y-1/2 text-forest" />
+          <input
+            id="global-search"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search"
+            className="h-12 w-full rounded-full bg-white pr-10 pl-10 text-[15px] text-ink shadow-[0_8px_24px_rgba(47,92,84,0.07)] outline-none placeholder:text-[#8aa39c]"
+          />
+          {query ? (
+            <button
+              type="button"
+              className="absolute top-1/2 right-1.5 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-muted"
+              aria-label="Clear search"
+              onClick={() => setQuery("")}
+            >
+              <CloseIcon className="h-4 w-4" />
+            </button>
+          ) : null}
+        </form>
+      </header>
+
+      <section className="mt-7">
+        <div className="flex items-end justify-between gap-4">
+          <h1 className="text-[2.05rem] font-medium leading-[1.05] tracking-[-0.04em] text-clay">
+            {hello},
+            <br />
+            {member.name}
+          </h1>
+          <p className="shrink-0 pb-1 text-right text-[13px] leading-4 text-muted">
+            <span className="block font-medium text-forest">Day {member.streakDay}</span>
+            of {member.streakGoal}
+          </p>
+        </div>
+        <p className="mt-3 text-[15px] leading-6 text-muted">Your plan for today, based on what you told us.</p>
       </section>
 
-      <form className="relative mt-3" role="search" onSubmit={(event) => event.preventDefault()}>
-        <label htmlFor="global-search" className="sr-only">
-          Global Search
-        </label>
-        {query ? (
-          <SearchIcon className="pointer-events-none absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-brown-soft" />
-        ) : null}
-        <input
-          id="global-search"
-          value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder="Global Search"
-          className={`w-full rounded-2xl border border-line bg-card py-3 text-sm text-ink outline-none placeholder:text-brown-soft focus:border-sage ${
-            query ? "pr-10 pl-10 text-left" : "px-4 text-center"
-          }`}
-        />
-        {query ? (
-          <button
-            type="button"
-            className="absolute top-1/2 right-2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-brown"
-            aria-label="Clear search"
-            onClick={() => setQuery("")}
-          >
-            <CloseIcon className="h-4 w-4" />
-          </button>
-        ) : null}
-      </form>
-
       {slides.length > 0 ? (
-        <div className="mt-4">
-          <Carousel slides={slides} />
+        <div className="mt-6">
+          <Carousel slides={slides} onNavigate={onNavigate} />
         </div>
       ) : null}
 
       {visibleCategories.length > 0 ? (
-        <div className="-mx-4 mt-4 flex gap-2.5 overflow-x-auto px-4 pb-1 scrollbar-none">
+        <div className="-mx-5 mt-5 flex gap-2 overflow-x-auto px-5 pb-1 scrollbar-none">
           {visibleCategories.map((item) => {
             const Icon = categoryIcons[item.id as keyof typeof categoryIcons];
             return (
@@ -128,10 +149,10 @@ export function HomeScreen({
                 key={item.id}
                 type="button"
                 onClick={() => onNavigate(item.tab, item.section)}
-                className="flex h-[5.15rem] w-[4.15rem] shrink-0 snap-start flex-col items-center justify-center gap-1 rounded-2xl border border-line bg-card px-1 text-center"
+                className="flex shrink-0 items-center gap-2 rounded-full bg-white py-2.5 pr-4 pl-3.5 shadow-[0_8px_22px_rgba(47,92,84,0.06)]"
               >
-                <Icon className="h-4 w-4 text-sage-deep" />
-                <span className="text-[10px] font-semibold leading-[1.15] text-brown">{item.label}</span>
+                <Icon className="h-4 w-4 text-forest" />
+                <span className="text-[13px] font-medium tracking-[-0.01em] text-ink capitalize">{item.label}</span>
               </button>
             );
           })}
@@ -139,33 +160,61 @@ export function HomeScreen({
       ) : null}
 
       {showContinue ? (
-        <section id="continue" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Continue where you left off :</h2>
-          <div className="mt-3 grid grid-cols-2 gap-3">
+        <section id="continue" className="mt-11 scroll-mt-4">
+          <SectionTitle>Continue where you left off</SectionTitle>
+          <div className="mt-4 grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => onNavigate("workshops")}
-              className="rounded-[1.3rem] border border-line bg-card p-3.5 text-left"
+              className="surface relative flex h-full min-h-[22rem] flex-col justify-end overflow-hidden p-4 text-left text-white"
             >
-              <span className="block text-sm font-bold leading-5 text-ink">Workshop Day {member.workshopDay}</span>
-              <Countdown />
+              <Image
+                src="/namaste.jpeg"
+                alt=""
+                fill
+                sizes="45vw"
+                className="object-cover object-[center_18%]"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
+              <span className="relative">
+                <span className="block text-[13px] font-medium text-white/80">Workshop</span>
+                <span className="mt-2 block text-[1.35rem] font-medium leading-none tracking-[-0.03em]">
+                  Day {member.workshopDay}
+                </span>
+                <Countdown tone="light" />
+              </span>
             </button>
             <button
               type="button"
-              onClick={() => onNavigate("home", "yoga")}
-              className="rounded-[1.3rem] border border-line bg-card p-3.5 text-left"
+              onClick={() => onNavigate("yoga")}
+              className="surface relative flex h-full min-h-[22rem] flex-col justify-end overflow-hidden p-4 text-left text-white"
             >
-              <span className="block text-sm font-bold text-ink">Daily Yoga</span>
-              <span className="mt-2 block text-[12px] leading-4 text-brown">Today’s goal: {member.yogaGoal}</span>
-              <span className="mt-3 block text-[12px] font-semibold leading-4 text-sage-deep">Continue the streak!</span>
-              <span className="mt-1 block text-[12px] font-bold text-ink">
-                Day {member.streakDay}/{member.streakGoal}
-              </span>
-              <span className="mt-2 block h-1.5 overflow-hidden rounded-full bg-sage/35">
-                <span
-                  className="block h-full rounded-full bg-sage-deep"
-                  style={{ width: `${(member.streakDay / member.streakGoal) * 100}%` }}
-                />
+              <Image
+                src="/yog.jpeg"
+                alt=""
+                fill
+                sizes="45vw"
+                className="object-cover object-[center_12%]"
+              />
+              <span className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
+              <span className="relative">
+                <span className="block text-[13px] font-medium text-white/80">Daily yoga</span>
+                <span className="mt-2 block text-[15px] font-medium leading-5 tracking-[-0.02em]">
+                  {member.yogaGoal}
+                </span>
+                <span className="mt-4 block text-[2rem] font-medium leading-none tracking-[-0.04em]">
+                  {member.streakDay}
+                  <span className="ml-1.5 text-[13px] font-normal tracking-normal text-white/75">
+                    of {member.streakGoal}
+                  </span>
+                </span>
+                <span className="mt-3 block h-1 overflow-hidden rounded-full bg-white/25">
+                  <span
+                    className="block h-full rounded-full bg-white"
+                    style={{ width: `${(member.streakDay / member.streakGoal) * 100}%` }}
+                  />
+                </span>
+                <span className="mt-3 block text-[13px] text-white/80">Continue the streak</span>
               </span>
             </button>
           </div>
@@ -173,37 +222,41 @@ export function HomeScreen({
       ) : null}
 
       {visibleProducts.length > 0 ? (
-        <section id="deals" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Deals of the day:</h2>
-          <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none snap-x">
+        <section id="deals" className="mt-11 scroll-mt-4">
+          <SectionTitle>Deals of the day</SectionTitle>
+          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleProducts.map((product) => (
               <button
                 key={product.id}
                 type="button"
                 onClick={() => onNavigate("shop")}
-                className="w-[9.4rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-card text-left"
+                className="surface w-[10.6rem] shrink-0 snap-start overflow-hidden text-left"
               >
                 {product.image ? (
-                  <span className="relative block h-24 bg-white">
+                  <span className="relative block h-28 bg-[#f6f3ee]">
                     <Image
-                      src={product.image}
+                      src={mediaSrc(product.image)}
                       alt={product.imageAlt ?? ""}
                       fill
-                      sizes="150px"
+                      sizes="180px"
                       className={product.imageClass ?? "object-cover"}
                     />
                   </span>
                 ) : (
-                  <span className="flex h-24 items-center justify-center bg-sage/25 text-sage-deep">
+                  <span className="flex h-28 items-center justify-center bg-[#e7f3ef] text-forest">
                     <JarIcon className="h-10 w-10" />
                   </span>
                 )}
-                <span className="block p-2.5">
-                  <span className="block min-h-8 text-[12px] font-bold leading-4 text-ink">{product.name}</span>
-                  <span className="mt-1.5 block text-sm font-bold text-ink">{inr(product.price)}</span>
-                  <span className="block text-[11px] text-brown-soft line-through">{inr(product.compareAt)}</span>
-                  <span className="mt-1 inline-flex rounded-full bg-sage/40 px-1.5 py-0.5 text-[10px] font-bold text-ink">
-                    {product.off}% off
+                <span className="block px-3.5 pt-3 pb-3.5">
+                  <span className="block min-h-10 text-[14px] font-medium leading-5 tracking-[-0.02em] text-ink">
+                    {product.name}
+                  </span>
+                  <span className="mt-2 block text-[15px] font-medium tracking-[-0.02em] text-ink">
+                    {inr(product.price)}
+                  </span>
+                  <span className="mt-1 flex items-baseline gap-2 text-[12px]">
+                    <span className="text-muted line-through">{inr(product.compareAt)}</span>
+                    <span className="font-medium text-forest">{product.off}% off</span>
                   </span>
                 </span>
               </button>
@@ -213,22 +266,22 @@ export function HomeScreen({
       ) : null}
 
       {visibleWorkshops.length > 0 ? (
-        <section id="workshops-home" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Upcoming workshops:</h2>
-          <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none snap-x">
+        <section id="workshops-home" className="mt-11 scroll-mt-4">
+          <SectionTitle>Upcoming workshops</SectionTitle>
+          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleWorkshops.map((workshop) => (
               <button
                 key={workshop.id}
                 type="button"
                 onClick={() => onNavigate("workshops", workshop.id === "retreat" ? "retreats" : undefined)}
-                className="w-[13.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-card text-left"
+                className="surface w-[15.5rem] shrink-0 snap-start overflow-hidden text-left"
               >
-                <span className="relative block h-24 bg-white">
-                  <Image src={workshop.image} alt={workshop.imageAlt} fill sizes="220px" className="object-cover" />
+                <span className="relative block h-32 bg-[#f6f3ee]">
+                  <Image src={workshop.image} alt={workshop.imageAlt} fill sizes="260px" className="object-cover" />
                 </span>
-                <span className="block p-3">
-                  <span className="block text-sm font-bold text-ink">{workshop.title}</span>
-                  <span className="mt-1 block text-xs text-brown">{workshop.when}</span>
+                <span className="block px-4 py-3.5">
+                  <span className="block text-[16px] font-medium tracking-[-0.02em] text-ink">{workshop.title}</span>
+                  <span className="mt-1 block text-[13px] text-muted">{workshop.when}</span>
                 </span>
               </button>
             ))}
@@ -237,23 +290,23 @@ export function HomeScreen({
       ) : null}
 
       {visibleYoga.length > 0 ? (
-        <section id="yoga" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Yoga recommended for you:</h2>
-          <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none snap-x">
+        <section id="yoga" className="mt-11 scroll-mt-4">
+          <SectionTitle>Yoga recommended for you</SectionTitle>
+          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleYoga.map((session) => (
-              <article key={session.id} className="w-[12.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-card">
-                <div className="relative h-28 bg-white">
+              <article key={session.id} className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden">
+                <div className="relative h-36 bg-[#f6f3ee]">
                   <Image
                     src={session.image}
                     alt={session.imageAlt}
                     fill
-                    sizes="200px"
+                    sizes="240px"
                     className={session.imageClass ?? "object-cover"}
                   />
                 </div>
-                <div className="p-3">
-                  <p className="text-sm font-bold text-ink">{session.title}</p>
-                  <p className="mt-1 text-xs text-brown">{session.detail}</p>
+                <div className="px-4 py-3.5">
+                  <p className="text-[16px] font-medium tracking-[-0.02em] text-ink">{session.title}</p>
+                  <p className="mt-1 text-[13px] text-muted">{session.detail}</p>
                 </div>
               </article>
             ))}
@@ -262,14 +315,17 @@ export function HomeScreen({
       ) : null}
 
       {visibleQuotes.length > 0 ? (
-        <section id="testimonials" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Testimonials</h2>
-          <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none snap-x">
+        <section id="testimonials" className="mt-11 scroll-mt-4">
+          <SectionTitle>Testimonials</SectionTitle>
+          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleQuotes.map((quote) => (
-              <blockquote key={quote.id} className="w-[16.5rem] shrink-0 snap-start rounded-2xl border border-line bg-card p-4">
-                <p className="text-sm leading-6 text-ink">“{quote.quote}”</p>
-                <footer className="mt-3 text-xs font-bold text-brown">
-                  {quote.name} · {quote.city}
+              <blockquote key={quote.id} className="surface w-[18rem] shrink-0 snap-start p-5">
+                <p className="text-[1.05rem] font-medium leading-snug tracking-[-0.025em] text-clay">
+                  “{quote.quote}”
+                </p>
+                <footer className="mt-4 text-[13px] font-medium text-forest">
+                  {quote.name}
+                  <span className="font-normal text-muted"> · {quote.city}</span>
                 </footer>
               </blockquote>
             ))}
@@ -278,17 +334,17 @@ export function HomeScreen({
       ) : null}
 
       {visibleRecipes.length > 0 ? (
-        <section id="recipes" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Recipes recommended for you:</h2>
-          <div className="-mx-4 mt-3 flex gap-3 overflow-x-auto px-4 pb-1 scrollbar-none snap-x">
+        <section id="recipes" className="mt-11 scroll-mt-4">
+          <SectionTitle>Recipes recommended for you</SectionTitle>
+          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleRecipes.map((recipe) => (
-              <article key={recipe.id} className="w-[12.5rem] shrink-0 snap-start overflow-hidden rounded-2xl border border-line bg-card">
-                <div className="relative h-24 bg-white">
-                  <Image src={recipe.image} alt={recipe.imageAlt} fill sizes="200px" className="object-cover" />
+              <article key={recipe.id} className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden">
+                <div className="relative h-32 bg-[#f6f3ee]">
+                  <Image src={recipe.image} alt={recipe.imageAlt} fill sizes="240px" className="object-cover" />
                 </div>
-                <div className="p-3">
-                  <p className="text-sm font-bold text-ink">{recipe.title}</p>
-                  <p className="mt-1 text-xs text-brown">{recipe.time}</p>
+                <div className="px-4 py-3.5">
+                  <p className="text-[16px] font-medium tracking-[-0.02em] text-ink">{recipe.title}</p>
+                  <p className="mt-1 text-[13px] text-muted">{recipe.time}</p>
                 </div>
               </article>
             ))}
@@ -297,24 +353,26 @@ export function HomeScreen({
       ) : null}
 
       {showPotluck ? (
-        <section id="potlucks" className="mt-7 scroll-mt-4">
-          <h2 className="text-[15px] font-semibold text-brown">Discover potlucks happening in your city</h2>
-          <article className="mt-3 overflow-hidden rounded-[1.4rem] border border-line bg-card">
-            <div className="relative h-36 bg-white">
-              <Image src={potluck.image} alt={potluck.imageAlt} fill sizes="430px" className="object-cover" />
-            </div>
-            <div className="p-4">
-              <p className="text-[11px] font-bold tracking-wide text-sage-deep uppercase">Happening near you</p>
-              <h3 className="mt-1 text-base font-bold text-ink">{potluck.title}</h3>
-              <p className="mt-1 text-sm text-brown">{potluck.when}</p>
-              <p className="mt-1 text-sm text-brown">{potluck.detail}</p>
+        <section id="potlucks" className="mt-11 scroll-mt-4">
+          <SectionTitle>Discover potlucks happening in your city</SectionTitle>
+          <article className="surface relative mt-4 h-64 overflow-hidden">
+            <Image src={potluck.image} alt={potluck.imageAlt} fill sizes="430px" className="object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
+              <p className="text-[13px] font-medium text-white/80">Happening near you</p>
+              <h3 className="mt-1 text-[1.35rem] font-medium leading-tight tracking-[-0.03em]">{potluck.title}</h3>
+              <p className="mt-1.5 text-[14px] text-white/85">
+                {potluck.when}
+                <span className="mx-1.5 text-white/50">·</span>
+                {potluck.detail}
+              </p>
             </div>
           </article>
         </section>
       ) : null}
 
       {query.trim() && !anyResults ? (
-        <p className="mt-8 text-center text-sm text-brown">Nothing matches “{query.trim()}”.</p>
+        <p className="mt-10 text-center text-[15px] text-muted">Nothing matches “{query.trim()}”.</p>
       ) : null}
     </div>
   );

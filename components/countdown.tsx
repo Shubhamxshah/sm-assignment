@@ -12,8 +12,10 @@ function format(total: number) {
   return [hours, minutes, seconds].map((part) => String(part).padStart(2, "0")).join(":");
 }
 
-export function Countdown() {
+export function Countdown({ tone = "ink" }: { tone?: "ink" | "light" }) {
   const [left, setLeft] = useState(START_SECONDS);
+  const label = tone === "light" ? "text-white/75" : "text-muted";
+  const time = tone === "light" ? "text-white" : "text-forest";
 
   useEffect(() => {
     if (endAt === 0) endAt = Date.now() + START_SECONDS * 1000;
@@ -24,13 +26,13 @@ export function Countdown() {
   }, []);
 
   if (left === 0) {
-    return <span className="mt-3 block text-sm font-bold text-sage-deep">Starting now</span>;
+    return <span className={`mt-4 block text-[15px] font-medium ${time}`}>Starting now</span>;
   }
 
   return (
-    <span className="mt-3 block text-[13px] leading-5 text-brown">
-      Starting in
-      <span className="mt-1 block font-bold text-lg tabular-nums tracking-wide text-sage-deep">
+    <span className="mt-4 block">
+      <span className={`block text-[13px] ${label}`}>Starting in</span>
+      <span className={`mt-1 block text-[1.65rem] font-medium tabular-nums tracking-[-0.04em] ${time}`}>
         {format(left)}
       </span>
     </span>

@@ -1,4 +1,4 @@
-export type Tab = "home" | "workshops" | "shop" | "profile";
+export type Tab = "home" | "workshops" | "shop" | "recipes" | "yoga";
 
 export const member = {
   name: "Shubham",
@@ -13,6 +13,8 @@ export type Slide = {
   alt: string;
   fit: "contain" | "cover";
   caption?: string;
+  tab: Tab;
+  section?: string;
 };
 
 export const carouselSlides: Slide[] = [
@@ -20,43 +22,40 @@ export const carouselSlides: Slide[] = [
     src: "/farm.webp",
     alt: "Fresh off the farm: oils, spices, dry fruits, sweeteners and seeds",
     fit: "contain" as const,
+    tab: "shop",
+    section: "spice-box",
   },
   {
     src: "/daily-yoga.webp",
     alt: "Daily yoga classes you can practice from home",
     fit: "contain" as const,
-  },
-  {
-    src: "/shop-millets.webp",
-    alt: "The full millet range, now delivering across India",
-    fit: "contain" as const,
-  },
-  {
-    src: "/yog.jpg",
-    alt: "Two practitioners in a quiet morning breathing practice",
-    fit: "cover" as const,
-    caption: "A quiet morning practice",
+    tab: "yoga",
+    section: "stretch",
   },
   {
     src: "/juice-sh.jpeg",
     alt: "Cold-pressed satvic juices being poured and tasted",
     fit: "cover" as const,
-    caption: "Cold-pressed satvic juices",
+    caption: "Beetroot-carrot juice",
+    tab: "recipes",
+    section: "juice",
   },
   {
-    src: "/namaste.jpeg",
+    src: "/subha.jpeg",
     alt: "Two hosts greeting the day with a namaste",
     fit: "cover" as const,
-    caption: "Start the day together",
+    caption: "Heal yourself challenge",
+    tab: "workshops",
+    section: "retreats",
   },
 ];
 
 export const categories = [
   { id: "workshops", label: "Explore workshops", tab: "workshops" as const },
-  { id: "yoga", label: "Daily Yoga Session", tab: "home" as const, section: "yoga" },
+  { id: "yoga", label: "Daily Yoga Session", tab: "yoga" as const },
   { id: "shop", label: "Shop satvic food", tab: "shop" as const },
   { id: "potlucks", label: "Potlucks around you", tab: "home" as const, section: "potlucks" },
-  { id: "recipes", label: "satvic recipes", tab: "home" as const, section: "recipes" },
+  { id: "recipes", label: "satvic recipes", tab: "recipes" as const },
   { id: "retreats", label: "Retreats", tab: "workshops" as const, section: "retreats" },
 ];
 
@@ -67,6 +66,9 @@ export const products = [
     price: 560,
     compareAt: 800,
     off: 30,
+    image: "/butter.jxl",
+    imageAlt: "Nourishing body butter",
+    imageClass: "object-cover",
   },
   {
     id: "millet-mix",
@@ -103,23 +105,23 @@ export const products = [
 export const workshops = [
   {
     id: "cooking",
-    title: "Satvic Cooking Basics",
+    title: "Ultimate Health challenge",
     when: "Saturday · 9:00 AM",
     image: "/namaste.jpeg",
     imageAlt: "Hosts welcoming a cooking circle",
   },
   {
     id: "juice",
-    title: "Juice Cleanse Circle",
+    title: "Juice fast",
     when: "Sunday · 7:30 AM",
     image: "/juice-sh.jpeg",
     imageAlt: "Fresh juices for the cleanse circle",
   },
   {
     id: "retreat",
-    title: "Farm Retreat Weekend",
+    title: "Heal yourself challenge",
     when: "14–16 Nov · overnight",
-    image: "/farm.webp",
+    image: "/subha.jpeg",
     imageAlt: "Farm produce for the retreat kitchen",
   },
 ];
@@ -144,7 +146,7 @@ export const yogaSessions = [
     id: "restore",
     title: "Evening restore",
     detail: "Wind down · 18 min",
-    image: "/upcomingBg.webp",
+    image: "/yog.jpeg",
     imageAlt: "People joining a live evening session from home",
   },
 ];
@@ -202,6 +204,10 @@ export const potluck = {
   image: "/upcomingBg.webp",
   imageAlt: "A community gathering joining from home and in person",
 };
+
+export function mediaSrc(src: string) {
+  return src.endsWith(".jxl") ? src.replace(/\.jxl$/, ".webp") : src;
+}
 
 export function inr(amount: number) {
   return `₹${amount.toLocaleString("en-IN")}`;
