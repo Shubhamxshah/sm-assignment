@@ -12,7 +12,15 @@ function format(total: number) {
   return [hours, minutes, seconds].map((part) => String(part).padStart(2, "0")).join(":");
 }
 
-export function Countdown({ tone = "ink", compact = false }: { tone?: "ink" | "light"; compact?: boolean }) {
+export function Countdown({
+  tone = "ink",
+  compact = false,
+  inline = false,
+}: {
+  tone?: "ink" | "light";
+  compact?: boolean;
+  inline?: boolean;
+}) {
   const [left, setLeft] = useState(START_SECONDS);
   const label = tone === "light" ? "text-white/75" : "text-muted";
   const time = tone === "light" ? "text-white" : "text-forest";
@@ -24,6 +32,14 @@ export function Countdown({ tone = "ink", compact = false }: { tone?: "ink" | "l
     const id = window.setInterval(tick, 1000);
     return () => window.clearInterval(id);
   }, []);
+
+  if (inline) {
+    return (
+      <span className={`mt-1 block truncate text-[12px] font-medium tabular-nums tracking-[-0.03em] ${time}`}>
+        {left === 0 ? "Starting now" : format(left)}
+      </span>
+    );
+  }
 
   if (left === 0) {
     return (
