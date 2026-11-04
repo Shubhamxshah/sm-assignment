@@ -175,6 +175,62 @@ export function HomeScreen({
         <p className="mt-3 text-[15px] leading-6 text-muted"> Live the satvic way of life</p>
       </section>
 
+      {showContinue ? (
+        <section id="continue" className="mt-5 scroll-mt-4">
+          <h2 className="text-[15px] font-medium tracking-[-0.02em] text-clay">Continue where you left off</h2>
+          <div className="mt-2.5 grid grid-cols-2 gap-2.5">
+            <button
+              type="button"
+              onClick={() => onNavigate("workshops")}
+              className="surface flex min-w-0 items-center gap-2.5 overflow-hidden p-2 text-left"
+            >
+              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[0.9rem]">
+                <Image
+                  src="/namaste.jpeg"
+                  alt=""
+                  fill
+                  sizes="56px"
+                  className="object-cover object-[center_18%]"
+                />
+              </span>
+              <span className="min-w-0 py-0.5">
+                <span className="block text-[11px] font-medium text-forest">Workshop</span>
+                <span className="mt-0.5 block truncate text-[14px] font-medium leading-4 tracking-[-0.02em] text-ink">
+                  Day {member.workshopDay}
+                </span>
+                <Countdown inline />
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate("yoga")}
+              className="surface flex min-w-0 items-center gap-2.5 overflow-hidden p-2 text-left"
+            >
+              <span className="relative h-14 w-14 shrink-0 overflow-hidden rounded-[0.9rem]">
+                <Image src="/yog.jpeg" alt="" fill sizes="56px" className="object-cover object-[center_12%]" />
+              </span>
+              <span className="min-w-0 flex-1 py-0.5">
+                <span className="block text-[11px] font-medium text-forest">Daily yoga</span>
+                <span className="mt-0.5 block truncate text-[14px] font-medium leading-4 tracking-[-0.02em] text-ink">
+                  {member.yogaGoal}
+                </span>
+                <span className="mt-1.5 flex items-center gap-1.5">
+                  <span className="h-1 min-w-0 flex-1 overflow-hidden rounded-full bg-[#e7f3ef]">
+                    <span
+                      className="block h-full rounded-full bg-forest"
+                      style={{ width: `${(member.streakDay / member.streakGoal) * 100}%` }}
+                    />
+                  </span>
+                  <span className="shrink-0 text-[11px] tabular-nums text-muted">
+                    {member.streakDay}/{member.streakGoal}
+                  </span>
+                </span>
+              </span>
+            </button>
+          </div>
+        </section>
+      ) : null}
+
       {slides.length > 0 ? (
         <div className="mt-6">
           <Carousel slides={slides} onNavigate={onNavigate} />
@@ -198,68 +254,6 @@ export function HomeScreen({
             );
           })}
         </div>
-      ) : null}
-
-      {showContinue ? (
-        <section id="continue" className="mt-11 scroll-mt-4">
-          <SectionTitle>Continue where you left off</SectionTitle>
-          <div className="mt-4 grid grid-cols-2 gap-3">
-            <button
-              type="button"
-              onClick={() => onNavigate("workshops")}
-              className="surface relative flex h-56 flex-col justify-end overflow-hidden p-3.5 text-left text-white"
-            >
-              <Image
-                src="/namaste.jpeg"
-                alt=""
-                fill
-                sizes="45vw"
-                className="object-cover object-[center_18%]"
-              />
-              <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_18%,rgba(28,51,48,0.45)_48%,rgba(28,51,48,0.88)_100%)]" />
-              <span className="relative">
-                <span className="block text-[12px] font-medium text-white/80">Workshop</span>
-                <span className="mt-1 block text-[16px] font-medium leading-5 tracking-[-0.02em]">
-                  Day {member.workshopDay}
-                </span>
-                <Countdown tone="light" compact />
-              </span>
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate("yoga")}
-              className="surface relative flex h-56 flex-col justify-end overflow-hidden p-3.5 text-left text-white"
-            >
-              <Image
-                src="/yog.jpeg"
-                alt=""
-                fill
-                sizes="45vw"
-                className="object-cover object-[center_12%]"
-              />
-              <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_18%,rgba(28,51,48,0.45)_48%,rgba(28,51,48,0.88)_100%)]" />
-              <span className="relative">
-                <span className="block text-[12px] font-medium text-white/80">Daily yoga</span>
-                <span className="mt-1 block text-[16px] font-medium leading-5 tracking-[-0.02em]">
-                  {member.yogaGoal}
-                </span>
-                <span className="mt-2.5 block text-[15px] font-medium leading-none tracking-[-0.03em]">
-                  {member.streakDay}
-                  <span className="ml-1.5 text-[12px] font-normal tracking-normal text-white/75">
-                    of {member.streakGoal}
-                  </span>
-                </span>
-                <span className="mt-2.5 block h-1 overflow-hidden rounded-full bg-white/25">
-                  <span
-                    className="block h-full rounded-full bg-white"
-                    style={{ width: `${(member.streakDay / member.streakGoal) * 100}%` }}
-                  />
-                </span>
-                <span className="mt-2 block text-[12px] text-white/80">Continue the streak</span>
-              </span>
-            </button>
-          </div>
-        </section>
       ) : null}
 
       {recommendations.length > 0 ? (
