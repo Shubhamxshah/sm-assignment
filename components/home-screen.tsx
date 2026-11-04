@@ -65,10 +65,54 @@ export function HomeScreen({
   const visibleProducts = products.filter((item) =>
     hit(query, "deal", "shop", item.name, `${item.off}% off`),
   );
-  const visibleWorkshops = workshops.filter((item) => hit(query, "workshop", "upcoming", item.title, item.when));
-  const visibleYoga = yogaSessions.filter((item) => hit(query, "yoga", "recommended", item.title, item.detail));
-  const visibleQuotes = testimonials.filter((item) => hit(query, "testimonial", item.quote, item.name, item.city));
+  const recommendedWorkshop = workshops.find((item) =>
+    hit(query, "recommended", "workshop", "upcoming", item.title, item.when),
+  );
+  const recommendedYoga = yogaSessions.find((item) =>
+    hit(query, "recommended", "yoga", item.title, item.detail),
+  );
+  const recommendedRecipe = recipes.find((item) => hit(query, "recommended", "recipe", item.title, item.time));
   const visibleRecipes = recipes.filter((item) => hit(query, "recipe", item.title, item.time));
+  const recommendations = [
+    recommendedWorkshop
+      ? {
+          id: `workshop-${recommendedWorkshop.id}`,
+          kind: "Workshop",
+          title: recommendedWorkshop.title,
+          detail: recommendedWorkshop.when,
+          image: recommendedWorkshop.image,
+          imageAlt: recommendedWorkshop.imageAlt,
+          tab: "workshops" as const,
+          section: recommendedWorkshop.id === "retreat" ? "retreats" : recommendedWorkshop.id,
+        }
+      : null,
+    recommendedYoga
+      ? {
+          id: `yoga-${recommendedYoga.id}`,
+          kind: "Yoga",
+          title: recommendedYoga.title,
+          detail: recommendedYoga.detail,
+          image: recommendedYoga.image,
+          imageAlt: recommendedYoga.imageAlt,
+          imageClass: recommendedYoga.imageClass,
+          tab: "yoga" as const,
+          section: recommendedYoga.id,
+        }
+      : null,
+    recommendedRecipe
+      ? {
+          id: `recipe-${recommendedRecipe.id}`,
+          kind: "Recipe",
+          title: recommendedRecipe.title,
+          detail: recommendedRecipe.time,
+          image: recommendedRecipe.image,
+          imageAlt: recommendedRecipe.imageAlt,
+          tab: "recipes" as const,
+          section: recommendedRecipe.id,
+        }
+      : null,
+  ].filter((item) => item !== null);
+  const visibleQuotes = testimonials.filter((item) => hit(query, "testimonial", item.quote, item.name, item.city));
   const showPotluck = potluck.happening && hit(query, "potluck", "city", potluck.title, potluck.when, potluck.detail);
 
   const anyResults =
@@ -77,8 +121,7 @@ export function HomeScreen({
     visibleCategories.length > 0 ||
     showContinue ||
     visibleProducts.length > 0 ||
-    visibleWorkshops.length > 0 ||
-    visibleYoga.length > 0 ||
+    recommendations.length > 0 ||
     visibleQuotes.length > 0 ||
     visibleRecipes.length > 0 ||
     showPotluck;
@@ -265,50 +308,32 @@ export function HomeScreen({
         </section>
       ) : null}
 
-      {visibleWorkshops.length > 0 ? (
-        <section id="workshops-home" className="mt-11 scroll-mt-4">
-          <SectionTitle>Upcoming workshops</SectionTitle>
+      {recommendations.length > 0 ? (
+        <section id="recommended" className="mt-11 scroll-mt-4">
+          <SectionTitle>Recommended for you</SectionTitle>
           <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
-            {visibleWorkshops.map((workshop) => (
+            {recommendations.map((item) => (
               <button
-                key={workshop.id}
+                key={item.id}
                 type="button"
-                onClick={() => onNavigate("workshops", workshop.id === "retreat" ? "retreats" : undefined)}
-                className="surface w-[15.5rem] shrink-0 snap-start overflow-hidden text-left"
+                onClick={() => onNavigate(item.tab, item.section)}
+                className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden text-left"
               >
-                <span className="relative block h-32 bg-[#f6f3ee]">
-                  <Image src={workshop.image} alt={workshop.imageAlt} fill sizes="260px" className="object-cover" />
-                </span>
-                <span className="block px-4 py-3.5">
-                  <span className="block text-[16px] font-medium tracking-[-0.02em] text-ink">{workshop.title}</span>
-                  <span className="mt-1 block text-[13px] text-muted">{workshop.when}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {visibleYoga.length > 0 ? (
-        <section id="yoga" className="mt-11 scroll-mt-4">
-          <SectionTitle>Yoga recommended for you</SectionTitle>
-          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
-            {visibleYoga.map((session) => (
-              <article key={session.id} className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden">
-                <div className="relative h-36 bg-[#f6f3ee]">
+                <span className="relative block h-36 bg-[#f6f3ee]">
                   <Image
-                    src={session.image}
-                    alt={session.imageAlt}
+                    src={item.image}
+                    alt={item.imageAlt}
                     fill
                     sizes="240px"
-                    className={session.imageClass ?? "object-cover"}
+                    className={item.imageClass ?? "object-cover"}
                   />
-                </div>
-                <div className="px-4 py-3.5">
-                  <p className="text-[16px] font-medium tracking-[-0.02em] text-ink">{session.title}</p>
-                  <p className="mt-1 text-[13px] text-muted">{session.detail}</p>
-                </div>
-              </article>
+                </span>
+                <span className="block px-4 py-3.5">
+                  <span className="block text-[12px] font-medium text-forest">{item.kind}</span>
+                  <span className="mt-1 block text-[16px] font-medium tracking-[-0.02em] text-ink">{item.title}</span>
+                  <span className="mt-1 block text-[13px] text-muted">{item.detail}</span>
+                </span>
+              </button>
             ))}
           </div>
         </section>
@@ -338,15 +363,20 @@ export function HomeScreen({
           <SectionTitle>Recipes recommended for you</SectionTitle>
           <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleRecipes.map((recipe) => (
-              <article key={recipe.id} className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden">
-                <div className="relative h-32 bg-[#f6f3ee]">
+              <button
+                key={recipe.id}
+                type="button"
+                onClick={() => onNavigate("recipes", recipe.id)}
+                className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden text-left"
+              >
+                <span className="relative block h-32 bg-[#f6f3ee]">
                   <Image src={recipe.image} alt={recipe.imageAlt} fill sizes="240px" className="object-cover" />
-                </div>
-                <div className="px-4 py-3.5">
-                  <p className="text-[16px] font-medium tracking-[-0.02em] text-ink">{recipe.title}</p>
-                  <p className="mt-1 text-[13px] text-muted">{recipe.time}</p>
-                </div>
-              </article>
+                </span>
+                <span className="block px-4 py-3.5">
+                  <span className="block text-[16px] font-medium tracking-[-0.02em] text-ink">{recipe.title}</span>
+                  <span className="mt-1 block text-[13px] text-muted">{recipe.time}</span>
+                </span>
+              </button>
             ))}
           </div>
         </section>

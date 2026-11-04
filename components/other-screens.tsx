@@ -36,7 +36,7 @@ export function WorkshopsScreen() {
         {workshops
           .filter((item) => item.id !== "retreat")
           .map((workshop) => (
-            <li key={workshop.id} className="surface overflow-hidden">
+            <li key={workshop.id} id={workshop.id} className="surface scroll-mt-4 overflow-hidden">
               <div className="relative h-40 bg-[#f6f3ee]">
                 <Image src={workshop.image} alt={workshop.imageAlt} fill sizes="430px" className="object-cover" />
               </div>
