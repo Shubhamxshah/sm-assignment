@@ -112,7 +112,9 @@ export function HomeScreen({
         }
       : null,
   ].filter((item) => item !== null);
-  const visibleQuotes = testimonials.filter((item) => hit(query, "testimonial", item.quote, item.name, item.city));
+  const visibleQuotes = testimonials.filter((item) =>
+    hit(query, "testimonial", "tweet", item.quote, item.name, item.handle, item.city),
+  );
   const showPotluck = potluck.happening && hit(query, "potluck", "city", potluck.title, potluck.when, potluck.detail);
 
   const anyResults =
@@ -264,7 +266,38 @@ export function HomeScreen({
         </section>
       ) : null}
 
-      {visibleProducts.length > 0 ? (
+      {recommendations.length > 0 ? (
+        <section id="recommended" className="mt-11 scroll-mt-4">
+          <SectionTitle>Recommended for you</SectionTitle>
+          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
+            {recommendations.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => onNavigate(item.tab, item.section)}
+                className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden text-left"
+              >
+                <span className="relative block h-36 bg-[#f6f3ee]">
+                  <Image
+                    src={item.image}
+                    alt={item.imageAlt}
+                    fill
+                    sizes="240px"
+                    className={item.imageClass ?? "object-cover"}
+                  />
+                </span>
+                <span className="block px-4 py-3.5">
+                  <span className="block text-[12px] font-medium text-forest">{item.kind}</span>
+                  <span className="mt-1 block text-[16px] font-medium tracking-[-0.02em] text-ink">{item.title}</span>
+                  <span className="mt-1 block text-[13px] text-muted">{item.detail}</span>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+{visibleProducts.length > 0 ? (
         <section id="deals" className="mt-11 scroll-mt-4">
           <SectionTitle>Deals of the day</SectionTitle>
           <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
@@ -308,75 +341,57 @@ export function HomeScreen({
         </section>
       ) : null}
 
-      {recommendations.length > 0 ? (
-        <section id="recommended" className="mt-11 scroll-mt-4">
-          <SectionTitle>Recommended for you</SectionTitle>
-          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
-            {recommendations.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => onNavigate(item.tab, item.section)}
-                className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden text-left"
-              >
-                <span className="relative block h-36 bg-[#f6f3ee]">
-                  <Image
-                    src={item.image}
-                    alt={item.imageAlt}
-                    fill
-                    sizes="240px"
-                    className={item.imageClass ?? "object-cover"}
-                  />
-                </span>
-                <span className="block px-4 py-3.5">
-                  <span className="block text-[12px] font-medium text-forest">{item.kind}</span>
-                  <span className="mt-1 block text-[16px] font-medium tracking-[-0.02em] text-ink">{item.title}</span>
-                  <span className="mt-1 block text-[13px] text-muted">{item.detail}</span>
-                </span>
-              </button>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
       {visibleQuotes.length > 0 ? (
         <section id="testimonials" className="mt-11 scroll-mt-4">
-          <SectionTitle>Testimonials</SectionTitle>
+          <SectionTitle>From the community</SectionTitle>
           <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
             {visibleQuotes.map((quote) => (
-              <blockquote key={quote.id} className="surface w-[18rem] shrink-0 snap-start p-5">
-                <p className="text-[1.05rem] font-medium leading-snug tracking-[-0.025em] text-clay">
-                  “{quote.quote}”
+              <article key={quote.id} className="surface w-[19rem] shrink-0 snap-start p-4">
+                <header className="flex items-start gap-3">
+                  <Image
+                    src={quote.avatar}
+                    alt=""
+                    width={80}
+                    height={80}
+                    className="h-10 w-10 shrink-0 rounded-full object-cover object-[70%_center]"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <p className="min-w-0">
+                        <span className="block truncate text-[15px] font-medium tracking-[-0.02em] text-ink">
+                          {quote.name}
+                        </span>
+                        <span className="block truncate text-[13px] text-muted">@{quote.handle}</span>
+                      </p>
+                      <XMark className="mt-0.5 h-4 w-4 shrink-0 text-ink" />
+                    </div>
+                  </div>
+                </header>
+                <p className="mt-3 text-[15px] leading-snug tracking-[-0.02em] text-ink">{quote.quote}</p>
+                <div className="relative mt-3 aspect-[4/3] overflow-hidden rounded-2xl bg-[#f6f3ee]">
+                  <Image src={quote.image} alt={quote.imageAlt} fill sizes="300px" className="object-cover" />
+                </div>
+                <p className="mt-3 text-[12px] text-muted">
+                  {quote.time}
+                  <span className="mx-1 text-muted/60">·</span>
+                  {quote.city}
                 </p>
-                <footer className="mt-4 text-[13px] font-medium text-forest">
-                  {quote.name}
-                  <span className="font-normal text-muted"> · {quote.city}</span>
-                </footer>
-              </blockquote>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {visibleRecipes.length > 0 ? (
-        <section id="recipes" className="mt-11 scroll-mt-4">
-          <SectionTitle>Recipes recommended for you</SectionTitle>
-          <div className="-mx-5 mt-4 flex gap-3 overflow-x-auto px-5 pb-2 scrollbar-none snap-x">
-            {visibleRecipes.map((recipe) => (
-              <button
-                key={recipe.id}
-                type="button"
-                onClick={() => onNavigate("recipes", recipe.id)}
-                className="surface w-[14.5rem] shrink-0 snap-start overflow-hidden text-left"
-              >
-                <span className="relative block h-32 bg-[#f6f3ee]">
-                  <Image src={recipe.image} alt={recipe.imageAlt} fill sizes="240px" className="object-cover" />
-                </span>
-                <span className="block px-4 py-3.5">
-                  <span className="block text-[16px] font-medium tracking-[-0.02em] text-ink">{recipe.title}</span>
-                  <span className="mt-1 block text-[13px] text-muted">{recipe.time}</span>
-                </span>
-              </button>
+                <div className="mt-3 flex items-center justify-between pr-2 text-[12px] text-muted" aria-hidden="true">
+                  <span className="flex items-center gap-1.5">
+                    <ReplyIcon className="h-4 w-4" />
+                    {quote.replies}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <RepostIcon className="h-4 w-4" />
+                    {quote.reposts}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <HeartIcon className="h-4 w-4" />
+                    {quote.likes}
+                  </span>
+                  <ShareIcon className="h-4 w-4" />
+                </div>
+              </article>
             ))}
           </div>
         </section>
@@ -405,5 +420,70 @@ export function HomeScreen({
         <p className="mt-10 text-center text-[15px] text-muted">Nothing matches “{query.trim()}”.</p>
       ) : null}
     </div>
+  );
+}
+
+function XMark({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M14.6 3.5h2.7l-5.9 6.8 7 9.2h-5.5l-4.3-5.6-4.9 5.6H1l6.3-7.3L.6 3.5h5.6l3.9 5.1 4.5-5.1Zm-1 14.3h1.5L6.5 5H4.9l8.7 12.8Z"
+      />
+    </svg>
+  );
+}
+
+function ReplyIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 7.5A2.5 2.5 0 0 1 7.5 5h9A2.5 2.5 0 0 1 19 7.5v6a2.5 2.5 0 0 1-2.5 2.5H10l-3.5 3v-3H7.5A2.5 2.5 0 0 1 5 13.5v-6Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function RepostIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 7h9.2M14.5 4.5 17 7l-2.5 2.5M17 17H7.8M9.5 19.5 7 17l2.5-2.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function HeartIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 18.5s-6.2-3.8-6.2-8A3.4 3.4 0 0 1 12 8.2a3.4 3.4 0 0 1 6.2 2.3c0 4.2-6.2 8-6.2 8Z"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ShareIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 14.5V5.5m0 0 3 3m-3-3-3 3M6 13.5V18a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 18 18v-4.5"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
