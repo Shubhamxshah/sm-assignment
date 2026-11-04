@@ -130,6 +130,31 @@ export function ShopScreen() {
   );
 }
 
+export function PotlucksScreen({ onBack }: { onBack: () => void }) {
+  return (
+    <div className="px-5 pt-[max(1.35rem,env(safe-area-inset-top))] pb-10">
+      <button type="button" onClick={onBack} className="text-[13px] font-medium text-forest">
+        Back to home
+      </button>
+      <PageTitle
+        title="Potlucks around you"
+        detail="Satvic dinners near you. Bring a dish, take a seat."
+      />
+      <article className="surface mt-6 overflow-hidden">
+        <div className="relative h-52 bg-[#f6f3ee]">
+          <Image src={potluck.image} alt={potluck.imageAlt} fill sizes="430px" className="object-cover" />
+        </div>
+        <div className="px-4 py-4">
+          <p className="text-[13px] font-medium text-forest">This week</p>
+          <h2 className="mt-1 text-[1.35rem] font-medium leading-tight tracking-[-0.03em] text-ink">{potluck.title}</h2>
+          <p className="mt-2 text-[15px] text-muted">{potluck.when}</p>
+          <p className="mt-1 text-[15px] text-muted">{potluck.detail}</p>
+        </div>
+      </article>
+    </div>
+  );
+}
+
 export function ProfileScreen() {
   const progress = (member.streakDay / member.streakGoal) * 100;
   return (

@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { HomeScreen } from "@/components/home-screen";
 import { BowlIcon, HomeIcon, LeafIcon, ShopIcon, WorkshopIcon } from "@/components/icons";
-import { RecipesScreen, ShopScreen, WorkshopsScreen, YogaScreen } from "@/components/other-screens";
+import { PotlucksScreen, RecipesScreen, ShopScreen, WorkshopsScreen, YogaScreen } from "@/components/other-screens";
 import type { Tab } from "@/lib/content";
 
 const tabs: Array<{ id: Tab; label: string; Icon: typeof HomeIcon }> = [
@@ -64,6 +64,7 @@ export function AppShell() {
           {tab === "shop" ? <ShopScreen /> : null}
           {tab === "recipes" ? <RecipesScreen /> : null}
           {tab === "yoga" ? <YogaScreen /> : null}
+          {tab === "potlucks" ? <PotlucksScreen onBack={() => navigate("home")} /> : null}
         </div>
         <nav
           aria-label="Primary"

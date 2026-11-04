@@ -400,19 +400,25 @@ export function HomeScreen({
       {showPotluck ? (
         <section id="potlucks" className="mt-11 scroll-mt-4">
           <SectionTitle>Discover potlucks happening in your city</SectionTitle>
-          <article className="surface relative mt-4 h-64 overflow-hidden">
+          <button
+            type="button"
+            onClick={() => onNavigate("potlucks")}
+            className="surface relative mt-4 block h-64 w-full overflow-hidden text-left"
+          >
             <Image src={potluck.image} alt={potluck.imageAlt} fill sizes="430px" className="object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-5 text-white">
-              <p className="text-[13px] font-medium text-white/80">Happening near you</p>
-              <h3 className="mt-1 text-[1.35rem] font-medium leading-tight tracking-[-0.03em]">{potluck.title}</h3>
-              <p className="mt-1.5 text-[14px] text-white/85">
+            <span className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
+            <span className="absolute inset-x-0 bottom-0 p-5 text-white">
+              <span className="block text-[13px] font-medium text-white/80">Happening near you</span>
+              <span className="mt-1 block text-[1.35rem] font-medium leading-tight tracking-[-0.03em]">
+                {potluck.title}
+              </span>
+              <span className="mt-1.5 block text-[14px] text-white/85">
                 {potluck.when}
                 <span className="mx-1.5 text-white/50">·</span>
                 {potluck.detail}
-              </p>
-            </div>
-          </article>
+              </span>
+            </span>
+          </button>
         </section>
       ) : null}
 

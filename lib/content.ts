@@ -1,4 +1,4 @@
-export type Tab = "home" | "workshops" | "shop" | "recipes" | "yoga";
+export type Tab = "home" | "workshops" | "shop" | "recipes" | "yoga" | "potlucks";
 
 export const member = {
   name: "Shubham",
@@ -54,7 +54,7 @@ export const categories = [
   { id: "workshops", label: "Explore workshops", tab: "workshops" as const },
   { id: "yoga", label: "Daily Yoga Session", tab: "yoga" as const },
   { id: "shop", label: "Shop satvic food", tab: "shop" as const },
-  { id: "potlucks", label: "Potlucks around you", tab: "home" as const, section: "potlucks" },
+  { id: "potlucks", label: "Potlucks around you", tab: "potlucks" as const },
   { id: "recipes", label: "satvic recipes", tab: "recipes" as const },
   { id: "retreats", label: "Retreats", tab: "workshops" as const, section: "retreats" },
 ];
