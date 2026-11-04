@@ -207,7 +207,7 @@ export function HomeScreen({
             <button
               type="button"
               onClick={() => onNavigate("workshops")}
-              className="surface relative flex h-full min-h-[22rem] flex-col justify-end overflow-hidden p-4 text-left text-white"
+              className="surface relative flex h-56 flex-col justify-end overflow-hidden p-3.5 text-left text-white"
             >
               <Image
                 src="/namaste.jpeg"
@@ -216,19 +216,19 @@ export function HomeScreen({
                 sizes="45vw"
                 className="object-cover object-[center_18%]"
               />
-              <span className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
+              <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_18%,rgba(28,51,48,0.45)_48%,rgba(28,51,48,0.88)_100%)]" />
               <span className="relative">
-                <span className="block text-[13px] font-medium text-white/80">Workshop</span>
-                <span className="mt-2 block text-[1.35rem] font-medium leading-none tracking-[-0.03em]">
+                <span className="block text-[12px] font-medium text-white/80">Workshop</span>
+                <span className="mt-1 block text-[16px] font-medium leading-5 tracking-[-0.02em]">
                   Day {member.workshopDay}
                 </span>
-                <Countdown tone="light" />
+                <Countdown tone="light" compact />
               </span>
             </button>
             <button
               type="button"
               onClick={() => onNavigate("yoga")}
-              className="surface relative flex h-full min-h-[22rem] flex-col justify-end overflow-hidden p-4 text-left text-white"
+              className="surface relative flex h-56 flex-col justify-end overflow-hidden p-3.5 text-left text-white"
             >
               <Image
                 src="/yog.jpeg"
@@ -237,25 +237,25 @@ export function HomeScreen({
                 sizes="45vw"
                 className="object-cover object-[center_12%]"
               />
-              <span className="absolute inset-0 bg-gradient-to-t from-[#1c3330] via-[#1c3330]/55 to-transparent" />
+              <span className="absolute inset-0 bg-[linear-gradient(180deg,transparent_18%,rgba(28,51,48,0.45)_48%,rgba(28,51,48,0.88)_100%)]" />
               <span className="relative">
-                <span className="block text-[13px] font-medium text-white/80">Daily yoga</span>
-                <span className="mt-2 block text-[15px] font-medium leading-5 tracking-[-0.02em]">
+                <span className="block text-[12px] font-medium text-white/80">Daily yoga</span>
+                <span className="mt-1 block text-[16px] font-medium leading-5 tracking-[-0.02em]">
                   {member.yogaGoal}
                 </span>
-                <span className="mt-4 block text-[2rem] font-medium leading-none tracking-[-0.04em]">
+                <span className="mt-2.5 block text-[15px] font-medium leading-none tracking-[-0.03em]">
                   {member.streakDay}
-                  <span className="ml-1.5 text-[13px] font-normal tracking-normal text-white/75">
+                  <span className="ml-1.5 text-[12px] font-normal tracking-normal text-white/75">
                     of {member.streakGoal}
                   </span>
                 </span>
-                <span className="mt-3 block h-1 overflow-hidden rounded-full bg-white/25">
+                <span className="mt-2.5 block h-1 overflow-hidden rounded-full bg-white/25">
                   <span
                     className="block h-full rounded-full bg-white"
                     style={{ width: `${(member.streakDay / member.streakGoal) * 100}%` }}
                   />
                 </span>
-                <span className="mt-3 block text-[13px] text-white/80">Continue the streak</span>
+                <span className="mt-2 block text-[12px] text-white/80">Continue the streak</span>
               </span>
             </button>
           </div>
